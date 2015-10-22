@@ -43,12 +43,20 @@ public class RedisDAOImpl implements InitializingBean, DisposableBean {
     }
 
     public void insertRecord(String key, String value) {
-        Jedis jedis = jedisSentinelPool.getResource();
-        jedis.set(key, value);
+        try(Jedis jedis = jedisSentinelPool.getResource();) {
+            jedis.set(key, value);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public String retrieveRecord(String key) {
-        Jedis jedis = jedisSentinelPool.getResource();
-        return jedis.get(key);
+        try(Jedis jedis = jedisSentinelPool.getResource();) {
+            return jedis.get(key);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
